@@ -1,0 +1,11 @@
+.chair-welcome {
+    text-align: center;
+    padding: 2rem;
+    background-color: #333;
+    color: white;
+}
+
+.chair-img {
+    width: 200px;
+    border-radius: 50%;
+}

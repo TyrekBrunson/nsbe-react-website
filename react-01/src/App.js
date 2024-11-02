@@ -1,22 +1,38 @@
 import React from 'react';
-import './App.css';
-import Header from './components/Header';
-import Banner from './components/Banner';
-import EventSection from './components/EventSection';
-import AboutSection from './components/AboutSection';
-import SubscribeSection from './components/SubscribeSection';
-import Footer from './components/Footer';
+import { Routes, Route } from 'react-router-dom';
+import Layout from './components/Layout';
+import HomePage from './pages/HomePage';
+import TimelinePage from './pages/TimelinePage';
+import CompetitionsPage from './pages/CompetitionsPage';
 
 function App() {
   return (
-    <div>
-      <Header />
-      <Banner />
-      <EventSection />
-      <AboutSection />
-      <SubscribeSection />
-      <Footer />
-    </div>
+    <Routes>
+      <Route
+        path="/"
+        element={
+          <Layout>
+            <HomePage />
+          </Layout>
+        }
+      />
+      <Route
+        path="/timeline"
+        element={
+          <Layout>
+            <TimelinePage />
+          </Layout>
+        }
+      />
+      <Route
+        path="/competitions"
+        element={
+          <Layout>
+            <CompetitionsPage />
+          </Layout>
+        }
+      />
+    </Routes>
   );
 }
 

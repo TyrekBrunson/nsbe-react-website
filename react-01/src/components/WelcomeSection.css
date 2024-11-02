@@ -1,0 +1,14 @@
+/* src/components/WelcomeSection.css */
+.welcome-section {
+    padding: 2rem;
+    text-align: center;
+    background-color: #f2f2f2;
+}
+
+.welcome-section h1 {
+    color: #333;
+}
+
+.welcome-section p {
+    color: #666;
+}

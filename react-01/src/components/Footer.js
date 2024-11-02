@@ -1,12 +1,11 @@
 import React from 'react';
-import './Footer.css';
-import logo from '../images/nsbe-logo.png';
+import nsbeLogo from '../images/nsbe-logo.png';
 
 function Footer() {
   return (
     <footer className="footer">
       <div className="footer-left">
-        <img src={logo} alt="NSBE Logo" className="nsbe-logo" />
+        <img src={nsbeLogo} alt="NSBE Logo" className="nsbe-logo" />
         <address>
           <strong>National Engineering Society</strong><br />
           987 Engineering Way<br />
@@ -26,7 +25,9 @@ function Footer() {
           <li><a href="https://convention.nsbe.org/">Conference Events</a></li>
         </ul>
         <div className="contact-button">
-          <a href="/contact"><button>Contact Us</button></a>
+          <a href="/contact">
+            <button>Contact US</button>
+          </a>
         </div>
       </div>
     </footer>
