@@ -1,0 +1,28 @@
+.main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+  }
+  
+  .header-left img {
+    width: 100px;
+  }
+  
+  .desktop-nav ul {
+    list-style-type: none;
+    display: flex;
+  }
+  
+  .desktop-nav ul li {
+    margin-right: 20px;
+  }
+  
+  @media (max-width: 768px) {
+    .desktop-nav ul {
+      display: none;
+    }
+  
+    /* Style for vertical mobile menu here */
+  }
+  

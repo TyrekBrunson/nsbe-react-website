@@ -1,0 +1,9 @@
+.upcoming-event {
+    padding: 20px;
+  }
+  
+  .event-buttons {
+    display: flex;
+    gap: 10px;
+  }
+  

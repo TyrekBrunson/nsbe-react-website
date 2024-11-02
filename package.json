@@ -1,0 +1,12 @@
+{
+  "name": "nsbe-react-website",
+  "version": "1.0.0",
+  "description": "The National Society of Black Engineers (NSBE) empowers Black engineers to excel academically, succeed professionally, and positively impact communities. This React-based project supports NSBE's mission through resources, events, and member engagement.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

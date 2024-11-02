@@ -1,0 +1,10 @@
+.main-banner .banner-images {
+    display: flex;
+    overflow: hidden;
+  }
+  
+  .banner-img {
+    width: 100%;
+    object-fit: cover;
+  }
+  
