@@ -8,6 +8,9 @@ import TimelinePage from './pages/TimelinePage';
 import CompetitionsPage from './pages/CompetitionsPage';
 import AboutPage from './pages/AboutPage';
 import AwardsPage from './pages/AwardsPage';
+import TermsPage from './pages/TermsPage';
+import PrivacyPage from './pages/PrivacyPage';
+import ContactPage from './pages/ContactPage'; // Import the ContactPage component
 
 function App() {
   return (
@@ -49,6 +52,30 @@ function App() {
         element={
           <Layout>
             <AwardsPage />
+          </Layout>
+        }
+      />
+      <Route
+        path="/terms"
+        element={
+          <Layout>
+            <TermsPage />
+          </Layout>
+        }
+      />
+      <Route
+        path="/privacy"
+        element={
+          <Layout>
+            <PrivacyPage />
+          </Layout>
+        }
+      />
+      <Route
+        path="/contact"
+        element={
+          <Layout>
+            <ContactPage />
           </Layout>
         }
       />

@@ -26,7 +26,7 @@ function HomePage() {
       <section className="upcoming-event">
         <div className="event-container">
           <h2>Elevate 2024: Engineering Success and Beyond</h2>
-          <p>The National Society of Black Engineers (NSBE) is dedicated to increasing the number of culturally responsible Black engineers...</p>
+          <p>The National Society of Black Engineers (NSBE) is dedicated to increasing the number of culturally responsible Black engineers who excel academically, succeed professionally, and positively impact the community. NSBE hosts a variety of events to support the academic, professional, and personal growth of its members. Our upcoming event is designed to bring together aspiring engineers, industry professionals, and community leaders to network, learn, and inspire one another. Join us for a day of workshops, panel discussions, and opportunities that will empower you to reach new heights in your engineering career.</p>
           <div className="event-buttons">
             <button className="join-event-btn">Join Event</button>
             <button className="sign-up-btn">Sign Up</button>
@@ -39,7 +39,7 @@ function HomePage() {
         <div className="about-content">
           <div className="about-text">
             <h2>About NSBE</h2>
-            <p>The National Society of Black Engineers (NSBE) is a student-governed organization...</p>
+            <p>The National Society of Black Engineers (NSBE) is a student-governed organization dedicated to increasing the number of Black engineers who excel academically, succeed professionally, and positively impact the community. Established in 1975, NSBE supports its members through mentorship, scholarships, conferences, and technical workshops, empowering them to thrive in STEM fields. With chapters across the U.S. and internationally, NSBE provides resources and networking opportunities for students and professionals alike, promoting diversity and inclusion within the engineering industry. By connecting members with industry leaders and corporate partners, NSBE equips Black engineers with the tools to succeed in a global workforce. Through leadership development, professional growth, and a strong focus on community, NSBE remains committed to shaping the future of engineering and ensuring that Black engineers play a vital role in advancing technology and society.</p>
           </div>
           <div className="profile-gallery">
             <img src={profile1} alt="Profile 1" />
