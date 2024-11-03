@@ -1,16 +1,16 @@
 // src/App.js
 
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import Layout from './components/Layout';
-import HomePage from './pages/HomePage';
-import TimelinePage from './pages/TimelinePage';
-import CompetitionsPage from './pages/CompetitionsPage';
 import AboutPage from './pages/AboutPage';
 import AwardsPage from './pages/AwardsPage';
-import TermsPage from './pages/TermsPage';
-import PrivacyPage from './pages/PrivacyPage';
+import CompetitionsPage from './pages/CompetitionsPage';
 import ContactPage from './pages/ContactPage'; // Import the ContactPage component
+import HomePage from './pages/HomePage';
+import PrivacyPage from './pages/PrivacyPage';
+import TermsPage from './pages/TermsPage';
+import TimelinePage from './pages/TimelinePage';
 
 function App() {
   return (
