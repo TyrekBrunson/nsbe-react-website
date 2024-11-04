@@ -1,6 +1,5 @@
-// src/components/Header.js
-
 import React from 'react';
+import { Link } from 'react-router-dom';
 import '../style.css';
 
 function Header() {
@@ -16,22 +15,22 @@ function Header() {
   return (
     <header className="main-header">
       <div className="header-left">
-        <a href="/">
+        <Link to="/">
           <img src="images/nsbe-logo.png" alt="NSBE Logo" className="nsbe-logo" />
-        </a>
+        </Link>
       </div>
 
       <div className="header-right">
         <nav className="desktop-nav">
           <ul>
-            <li><a href="/">Welcome</a></li>
-            <li><a href="/about">About</a></li>
-            <li><a href="/timeline">Timeline</a></li>
+            <li><Link to="/">Welcome</Link></li>
+            <li><Link to="/about">About</Link></li>
+            <li><Link to="/timeline">Timeline</Link></li>
             <li className="dropdown">
-              <a href="#" className="dropbtn">Programming</a>
+              <button className="dropbtn" onClick={(e) => e.preventDefault()}>Programming</button>
               <div className="dropdown-content">
-                <a href="/awards">Awards</a>
-                <a href="/competitions">Competitions</a>
+                <Link to="/awards">Awards</Link>
+                <Link to="/competitions">Competitions</Link>
               </div>
             </li>
           </ul>

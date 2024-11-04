@@ -1,6 +1,5 @@
-// src/components/Footer.js
-
 import React from 'react';
+import { Link } from 'react-router-dom';
 import '../style.css';
 
 function Footer() {
@@ -8,9 +7,9 @@ function Footer() {
     <>
       <footer className="footer">
         <div className="footer-left">
-          <a href="/">
+          <Link to="/">
             <img src="images/nsbe-logo.png" alt="NSBE Logo" className="nsbe-logo" />
-          </a>
+          </Link>
           <address>
             <strong>National Society of Black Engineers</strong><br />
             987 Engineering Way<br />
@@ -31,17 +30,17 @@ function Footer() {
             <li><a href="https://convention.nsbe.org/">Conference Events</a></li>
           </ul>
           <div className="contact-button">
-            <a href="/contact">
+            <Link to="/contact">
               <button>Contact Us</button>
-            </a>
+            </Link>
           </div>
         </div>
       </footer>
 
       <div className="footer-links">
-        <a href="/terms">Terms & Conditions</a> |
-        <a href="/privacy">Privacy Policy</a> |
-        <a href="/contact">Contact us</a>
+        <Link to="/terms">Terms & Conditions</Link> |
+        <Link to="/privacy">Privacy Policy</Link> |
+        <Link to="/contact">Contact us</Link>
       </div>
 
       <div className="social-media">
