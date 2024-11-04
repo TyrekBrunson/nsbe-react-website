@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/nsbe-react-website/static/css/main.fd98725b.css",
+    "main.js": "/nsbe-react-website/static/js/main.5acd320b.js",
+    "static/media/banner-city.png": "/nsbe-react-website/static/media/banner-city.d20d06cb531b4aa2368a.png",
+    "static/media/banner1-placeholder.png": "/nsbe-react-website/static/media/banner1-placeholder.9d2295f3b5549f091644.png",
+    "static/media/banner2-placeholder.png": "/nsbe-react-website/static/media/banner2-placeholder.ad1b61885ef562e94c16.png",
+    "static/media/banner3-placeholder.png": "/nsbe-react-website/static/media/banner3-placeholder.52bb483189d4e997b148.png",
+    "static/media/profile1-placeholder.png": "/nsbe-react-website/static/media/profile1-placeholder.6eb14b21d1cc8904da94.png",
+    "static/media/profile4-placeholder.png": "/nsbe-react-website/static/media/profile4-placeholder.93e55d3c504e3d41af27.png",
+    "static/media/profile3-placeholder.png": "/nsbe-react-website/static/media/profile3-placeholder.33dccd9822c757dcb207.png",
+    "static/media/profile2-placeholder.png": "/nsbe-react-website/static/media/profile2-placeholder.ad0ffb4eb64f6afcec2c.png",
+    "static/media/nsbe-logoF2AA4CFF.png": "/nsbe-react-website/static/media/nsbe-logoF2AA4CFF.5a3db7a3aaa486f38979.png",
+    "static/media/nsbe-logo.png": "/nsbe-react-website/static/media/nsbe-logo.4896712de413af9451e2.png",
+    "index.html": "/nsbe-react-website/index.html",
+    "main.fd98725b.css.map": "/nsbe-react-website/static/css/main.fd98725b.css.map",
+    "main.5acd320b.js.map": "/nsbe-react-website/static/js/main.5acd320b.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.fd98725b.css",
+    "static/js/main.5acd320b.js"
+  ]
+}
