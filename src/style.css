@@ -253,35 +253,58 @@ nav ul li a:hover {
     display: inline-block;
 }
 
+/* Style for the dropbtn link */
 .dropbtn {
-    color: #fff; /* Same color as the other links */
+    color: #fff; /* Match link color to white */
     text-decoration: none;
-    font-size: 1.1rem;
+    font-size: 1.1rem; /* Match other link font size */
+    padding: 0.5rem 1rem; /* Adjust padding for alignment */
+    cursor: pointer;
+    border: none;
+    background: none; /* Remove any background */
 }
 
+/* Hover effect to match other links */
+.dropbtn:hover {
+    color: #F2AA4CFF; /* Add hover color (orange) like other links */
+    text-decoration: underline; /* Same underline hover effect */
+}
+
+/* Dropdown menu styling */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* Dropdown content */
 .dropdown-content {
     display: none;
     position: absolute;
-    background-color: #333; /* Dark background for the dropdown */
+    background-color: #333; /* Dark background for dropdown */
     min-width: 160px;
-    box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
     z-index: 1;
+    border-radius: 4px; /* Rounded corners for dropdown */
 }
 
+/* Links inside the dropdown */
 .dropdown-content a {
     color: #fff; /* White text for default state */
-    padding: 12px 16px;
+    padding: 10px 16px;
     text-decoration: none;
     display: block;
+    font-size: 1.1rem; /* Match other link font size */
 }
 
+/* Hover effect for dropdown links */
 .dropdown-content a:hover {
     background-color: #F2AA4CFF; /* Orange background on hover */
     color: #000; /* Black text on hover */
 }
 
+/* Show dropdown content on hover */
 .dropdown:hover .dropdown-content {
-    display: block; /* Show the dropdown on hover */
+    display: block;
 }
 
 
