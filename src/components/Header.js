@@ -1,25 +1,15 @@
-// src/components/Header.js
-
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import '../style.css';
 
 function Header() {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
-  const toggleMobileMenu = (e) => {
-    e.stopPropagation();
-    console.log("Toggling mobile menu"); // Debugging log
-    setIsMobileMenuOpen(!isMobileMenuOpen);
-    setIsDropdownOpen(false); // Close dropdown if mobile menu is toggled
-  };
-
-  const toggleDropdownMenu = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    console.log("Toggling dropdown menu"); // Debugging log
-    setIsDropdownOpen(!isDropdownOpen);
+  const toggleMobileMenu = () => {
+    const mobileMenu = document.getElementById("mobileMenu");
+    if (mobileMenu.style.display === "flex") {
+      mobileMenu.style.display = "none";
+    } else {
+      mobileMenu.style.display = "flex";
+    }
   };
 
   return (
@@ -37,15 +27,11 @@ function Header() {
             <li><Link to="/about">About</Link></li>
             <li><Link to="/timeline">Timeline</Link></li>
             <li className="dropdown">
-              <button className="dropbtn" onClick={toggleDropdownMenu}>
-                Programming
-              </button>
-              {isDropdownOpen && (
-                <div className="dropdown-content">
-                  <Link to="/awards">Awards</Link>
-                  <Link to="/competitions">Competitions</Link>
-                </div>
-              )}
+              <button className="dropbtn" onClick={(e) => e.preventDefault()}>Programming</button>
+              <div className="dropdown-content">
+                <Link to="/awards">Awards</Link>
+                <Link to="/competitions">Competitions</Link>
+              </div>
             </li>
           </ul>
         </nav>
@@ -98,24 +84,6 @@ function Header() {
         <div></div>
         <div></div>
       </div>
-
-      {/* Mobile Navigation Menu */}
-      {isMobileMenuOpen && (
-        <div className="mobile-nav" id="mobileMenu">
-          <Link to="/">Welcome</Link>
-          <Link to="/about">About</Link>
-          <Link to="/timeline">Timeline</Link>
-          <button onClick={toggleDropdownMenu} className="dropbtn-mobile">
-            Programming
-          </button>
-          {isDropdownOpen && (
-            <div className="dropdown-content-mobile">
-              <Link to="/awards">Awards</Link>
-              <Link to="/competitions">Competitions</Link>
-            </div>
-          )}
-        </div>
-      )}
     </header>
   );
 }

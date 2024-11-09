@@ -1,5 +1,6 @@
 import React from 'react';
-import cityBanner from '../images/banner-city.png';
+import './HomePage.css'; // Make sure to create this CSS file with your styling
+import nsbeLogo from '../images/nsbe-logo.png';
 import banner1 from '../images/banner1-placeholder.png';
 import banner2 from '../images/banner2-placeholder.png';
 import banner3 from '../images/banner3-placeholder.png';
@@ -7,6 +8,7 @@ import profile1 from '../images/profile1-placeholder.png';
 import profile2 from '../images/profile2-placeholder.png';
 import profile3 from '../images/profile3-placeholder.png';
 import profile4 from '../images/profile4-placeholder.png';
+import cityBanner from '../images/banner-city.png';
 
 function HomePage() {
   return (
