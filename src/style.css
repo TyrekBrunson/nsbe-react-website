@@ -274,6 +274,7 @@ nav ul li a:hover {
 .dropdown {
     position: relative;
     display: inline-block;
+    margin-left: 2rem; /* Same spacing as other links */
 }
 
 /* Dropdown content */

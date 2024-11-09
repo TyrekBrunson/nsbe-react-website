@@ -2,11 +2,12 @@
 
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
+import Header from './components/Header'; // Import the Header component
 import Layout from './components/Layout';
 import AboutPage from './pages/AboutPage';
 import AwardsPage from './pages/AwardsPage';
 import CompetitionsPage from './pages/CompetitionsPage';
-import ContactPage from './pages/ContactPage'; // Import the ContactPage component
+import ContactPage from './pages/ContactPage';
 import HomePage from './pages/HomePage';
 import PrivacyPage from './pages/PrivacyPage';
 import TermsPage from './pages/TermsPage';
@@ -19,6 +20,7 @@ function App() {
         path="/"
         element={
           <Layout>
+            <Header /> {/* Add Header here */}
             <HomePage />
           </Layout>
         }
@@ -27,6 +29,7 @@ function App() {
         path="/timeline"
         element={
           <Layout>
+            <Header />
             <TimelinePage />
           </Layout>
         }
@@ -35,6 +38,7 @@ function App() {
         path="/competitions"
         element={
           <Layout>
+            <Header />
             <CompetitionsPage />
           </Layout>
         }
@@ -43,6 +47,7 @@ function App() {
         path="/about"
         element={
           <Layout>
+            <Header />
             <AboutPage />
           </Layout>
         }
@@ -51,6 +56,7 @@ function App() {
         path="/awards"
         element={
           <Layout>
+            <Header />
             <AwardsPage />
           </Layout>
         }
@@ -59,6 +65,7 @@ function App() {
         path="/terms"
         element={
           <Layout>
+            <Header />
             <TermsPage />
           </Layout>
         }
@@ -67,6 +74,7 @@ function App() {
         path="/privacy"
         element={
           <Layout>
+            <Header />
             <PrivacyPage />
           </Layout>
         }
@@ -75,6 +83,7 @@ function App() {
         path="/contact"
         element={
           <Layout>
+            <Header />
             <ContactPage />
           </Layout>
         }
