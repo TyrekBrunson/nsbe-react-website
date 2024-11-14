@@ -1,19 +1,33 @@
-// src/pages/ContactPage.js
-
-import React from 'react';
+import React, { useState } from 'react';
 import '../style.css';
 
 function ContactPage() {
-  const handleSubmit = (event) => {
+  const [showOtherInput, setShowOtherInput] = useState(false);
+  const [formStatus, setFormStatus] = useState({ success: false, error: false });
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    // Here, you can add functionality to submit the form.
-    console.log("Form submitted");
-    // Display success or error messages as required.
+
+    const formData = new FormData(event.target);
+    try {
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        body: formData,
+      });
+      
+      if (response.ok) {
+        setFormStatus({ success: true, error: false });
+        event.target.reset();
+      } else {
+        setFormStatus({ success: false, error: true });
+      }
+    } catch {
+      setFormStatus({ success: false, error: true });
+    }
   };
 
   const toggleOtherInput = (event) => {
-    const otherSourceInput = document.getElementById("otherSource");
-    otherSourceInput.style.display = event.target.value === "Other" ? "block" : "none";
+    setShowOtherInput(event.target.value === "Other");
   };
 
   return (
@@ -35,22 +49,24 @@ function ContactPage() {
         <textarea id="message" name="message" rows="4" required></textarea>
 
         {/* Radio Buttons for "Where did you hear about NSBE?" */}
-        <fieldset>
+        <fieldset onChange={toggleOtherInput}>
           <legend>Where did you hear about NSBE?</legend>
           <label><input type="radio" name="source" value="Facebook" required /> Facebook</label>
           <label><input type="radio" name="source" value="Instagram" /> Instagram</label>
           <label><input type="radio" name="source" value="LinkedIn" /> LinkedIn</label>
           <label><input type="radio" name="source" value="X" /> X (Twitter)</label>
           <label><input type="radio" name="source" value="YouTube" /> YouTube</label>
-          <label><input type="radio" name="source" value="Other" onClick={toggleOtherInput} /> Other</label>
-          <input type="text" id="otherSource" name="otherSource" placeholder="Please specify" style={{ display: 'none' }} />
+          <label><input type="radio" name="source" value="Other" /> Other</label>
+          {showOtherInput && (
+            <input type="text" id="otherSource" name="otherSource" placeholder="Please specify" />
+          )}
         </fieldset>
 
         <button type="submit">Submit</button>
         
         {/* Success and Error Messages */}
-        <p id="successMessage" style={{ display: 'none', color: '#008000' }}>Thank you! Your message has been sent.</p>
-        <p id="errorMessage" style={{ display: 'none', color: 'red' }}>There was an error submitting your form. Please try again.</p>
+        {formStatus.success && <p id="successMessage" style={{ color: '#008000' }}>Thank you! Your message has been sent.</p>}
+        {formStatus.error && <p id="errorMessage" style={{ color: 'red' }}>There was an error submitting your form. Please try again.</p>}
       </form>
 
       {/* Embedded Google Map */}
