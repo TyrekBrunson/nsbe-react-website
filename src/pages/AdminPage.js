@@ -43,12 +43,12 @@ function AdminPage() {
     const file = e.target.files[0];
     if (!file) return;
 
-    const formData = new FormData();
-    formData.append("image", file);
+    const uploadData = new FormData();
+    uploadData.append("image", file);
 
     fetch("http://localhost:3000/api/upload", {
       method: "POST",
-      body: formData,
+      body: uploadData,
     })
       .then((res) => res.json())
       .then((data) => {
@@ -67,12 +67,16 @@ function AdminPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
+  
+    // Format the data before submission
     const formattedData = {
       ...formData,
-      details: formData.details.split(",").map((item) => item.trim()),
-      attendees: parseInt(formData.attendees, 10),
+      details: formData.details.split(",").map((item) => item.trim()), // Split and trim details
+      attendees: parseInt(formData.attendees, 10) || 0, // Ensure attendees is a number, default to 0
+      img_name: formData.img_name || "default.jpg", // Fallback to a default image name
     };
+
+    console.log("Submitting data:", formattedData); // Log the submitted data for debugging
 
     fetch("http://localhost:3000/api/events", {
       method: "POST",
@@ -94,7 +98,7 @@ function AdminPage() {
         }
       })
       .catch((err) => {
-        console.error("Error:", err);
+        console.error("Error:", err); // Log the error
         setError("An unexpected error occurred.");
       });
   };
@@ -103,7 +107,12 @@ function AdminPage() {
     fetch(`http://localhost:3000/api/events/${id}`, {
       method: "DELETE",
     })
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Failed to delete event");
+        }
+        return res.json();
+      })
       .then((data) => {
         if (data.success) {
           alert("Event deleted successfully!");
