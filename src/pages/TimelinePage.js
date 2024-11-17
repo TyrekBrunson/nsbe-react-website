@@ -1,20 +1,22 @@
-// src/pages/TimelinePage.js
-
-import React, { useEffect, useState } from 'react';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
-import '../style.css';
+import React, { useEffect, useState } from "react";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+import "../style.css";
 
 function TimelinePage() {
   const [events, setEvents] = useState([]);
 
   useEffect(() => {
-    const jsonUrl = 'https://raw.githubusercontent.com/TyrekBrunson/TyrekBrunson.github.io/main/projects/part7/timeline.json';
-
-    fetch(jsonUrl)
-      .then(response => response.json())
-      .then(data => setEvents(data))
-      .catch(error => console.error('Error loading JSON:', error));
+    // Fetch events from the backend API
+    fetch("http://localhost:3000/api/events")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to fetch events");
+        }
+        return response.json(); // Parse the JSON response
+      })
+      .then((data) => setEvents(data)) // Update state with fetched events
+      .catch((error) => console.error("Error fetching events:", error));
   }, []);
 
   return (
@@ -23,11 +25,15 @@ function TimelinePage() {
         <h1>50 Years of NSBE</h1>
         <div id="timeline-container">
           {events.length > 0 ? (
-            events.map(event => (
+            events.map((event) => (
               <div key={event._id} className="timeline-item">
                 <div className="timeline-date">{event.date}</div>
                 <div className="timeline-content">
-                  <img src={`images/${event.img_name}`} alt={event.event} />
+                  <img
+                    src={`images/${event.img_name}`}
+                    alt={event.event}
+                    className="event-image"
+                  />
                   <h3>{event.event}</h3>
                   <p>{event.description}</p>
                   <ul>
