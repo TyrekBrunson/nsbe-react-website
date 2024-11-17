@@ -6,8 +6,8 @@ import "../style.css";
 function TimelinePage() {
   const [events, setEvents] = useState([]);
 
-  useEffect(() => {
-    // Fetch events from the backend API
+  // Fetch events from the backend
+  const fetchEvents = () => {
     fetch("http://localhost:3000/api/events")
       .then((response) => {
         if (!response.ok) {
@@ -17,7 +17,29 @@ function TimelinePage() {
       })
       .then((data) => setEvents(data)) // Update state with fetched events
       .catch((error) => console.error("Error fetching events:", error));
+  };
+
+  // Use effect to load events when the component loads
+  useEffect(() => {
+    fetchEvents();
   }, []);
+
+  // Handle event deletion
+  const handleDelete = (id) => {
+    fetch(`http://localhost:3000/api/events/${id}`, {
+      method: "DELETE",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          alert("Event deleted successfully!");
+          fetchEvents(); // Refresh the event list
+        } else {
+          alert("Error deleting event: " + data.message);
+        }
+      })
+      .catch((error) => console.error("Error deleting event:", error));
+  };
 
   return (
     <div>
@@ -41,6 +63,10 @@ function TimelinePage() {
                       <li key={index}>{detail}</li>
                     ))}
                   </ul>
+                  {/* Delete Button */}
+                  <button onClick={() => handleDelete(event._id)}>
+                    Delete Event
+                  </button>
                 </div>
               </div>
             ))

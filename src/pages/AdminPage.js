@@ -39,6 +39,32 @@ function AdminPage() {
     fetchEvents();
   }, []);
 
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("image", file);
+
+    fetch("http://localhost:3000/api/upload", {
+      method: "POST",
+      body: formData,
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          setFormData((prevFormData) => ({
+            ...prevFormData,
+            img_name: data.imagePath, // Update formData with the image path
+          }));
+          alert("Image uploaded successfully!");
+        } else {
+          alert("Image upload failed: " + data.message);
+        }
+      })
+      .catch((err) => console.error("Error uploading image:", err));
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -73,6 +99,22 @@ function AdminPage() {
       });
   };
 
+  const handleDelete = (id) => {
+    fetch(`http://localhost:3000/api/events/${id}`, {
+      method: "DELETE",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          alert("Event deleted successfully!");
+          fetchEvents(); // Refresh the event list
+        } else {
+          alert("Error deleting event: " + data.message);
+        }
+      })
+      .catch((err) => console.error("Error deleting event:", err));
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -82,15 +124,71 @@ function AdminPage() {
     <div className="admin-panel">
       <h1>Admin Panel</h1>
       <form onSubmit={handleSubmit}>
-        <input name="event" value={formData.event} onChange={handleChange} placeholder="Event Name" required />
-        <input name="img_name" value={formData.img_name} onChange={handleChange} placeholder="Image Name" required />
-        <input name="date" value={formData.date} onChange={handleChange} placeholder="Year (YYYY)" required />
-        <textarea name="description" value={formData.description} onChange={handleChange} placeholder="Description" required />
-        <input name="details" value={formData.details} onChange={handleChange} placeholder="Details (comma-separated)" required />
-        <input name="location" value={formData.location} onChange={handleChange} placeholder="Location" required />
-        <input name="attendees" value={formData.attendees} onChange={handleChange} placeholder="Number of Attendees" required />
-        <input name="theme" value={formData.theme} onChange={handleChange} placeholder="Theme" required />
-        <input name="organizer" value={formData.organizer} onChange={handleChange} placeholder="Organizer" required />
+        <input
+          name="event"
+          value={formData.event}
+          onChange={handleChange}
+          placeholder="Event Name"
+          required
+        />
+        <div className="form-group">
+          <label htmlFor="image">Upload Image:</label>
+          <input
+            type="file"
+            id="image"
+            onChange={handleImageUpload}
+            accept="image/*"
+          />
+        </div>
+        <input
+          name="date"
+          value={formData.date}
+          onChange={handleChange}
+          placeholder="Year (YYYY)"
+          required
+        />
+        <textarea
+          name="description"
+          value={formData.description}
+          onChange={handleChange}
+          placeholder="Description"
+          required
+        />
+        <input
+          name="details"
+          value={formData.details}
+          onChange={handleChange}
+          placeholder="Details (comma-separated)"
+          required
+        />
+        <input
+          name="location"
+          value={formData.location}
+          onChange={handleChange}
+          placeholder="Location"
+          required
+        />
+        <input
+          name="attendees"
+          value={formData.attendees}
+          onChange={handleChange}
+          placeholder="Number of Attendees"
+          required
+        />
+        <input
+          name="theme"
+          value={formData.theme}
+          onChange={handleChange}
+          placeholder="Theme"
+          required
+        />
+        <input
+          name="organizer"
+          value={formData.organizer}
+          onChange={handleChange}
+          placeholder="Organizer"
+          required
+        />
         <button type="submit">Submit</button>
       </form>
       {error && <p style={{ color: "red" }}>{error}</p>}
@@ -100,7 +198,8 @@ function AdminPage() {
       <ul>
         {events.map((event) => (
           <li key={event._id}>
-            {event.event} - {event.location} ({event.date})
+            {event.event} - {event.location} ({event.date}){" "}
+            <button onClick={() => handleDelete(event._id)}>Delete</button>
           </li>
         ))}
       </ul>
