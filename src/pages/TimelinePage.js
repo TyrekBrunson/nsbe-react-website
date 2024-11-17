@@ -24,23 +24,6 @@ function TimelinePage() {
     fetchEvents();
   }, []);
 
-  // Handle event deletion
-  const handleDelete = (id) => {
-    fetch(`http://localhost:3000/api/events/${id}`, {
-      method: "DELETE",
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.success) {
-          alert("Event deleted successfully!");
-          fetchEvents(); // Refresh the event list
-        } else {
-          alert("Error deleting event: " + data.message);
-        }
-      })
-      .catch((error) => console.error("Error deleting event:", error));
-  };
-
   return (
     <div>
       <section className="timeline-section">
@@ -63,10 +46,6 @@ function TimelinePage() {
                       <li key={index}>{detail}</li>
                     ))}
                   </ul>
-                  {/* Delete Button */}
-                  <button onClick={() => handleDelete(event._id)}>
-                    Delete Event
-                  </button>
                 </div>
               </div>
             ))
