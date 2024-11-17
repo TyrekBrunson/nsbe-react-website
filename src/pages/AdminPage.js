@@ -1,116 +1,109 @@
-import React, { useState } from "react";
-import Joi from "joi";
+import React, { useState, useEffect } from "react";
 
 function AdminPage() {
+  const [events, setEvents] = useState([]); // Store events
   const [formData, setFormData] = useState({
-    dataType: "event",
-    title: "",
+    event: "",
+    img_name: "",
+    date: "",
     description: "",
-    image: "",
+    details: "",
+    location: "",
+    attendees: "",
+    theme: "",
+    organizer: "",
   });
-
-  const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [error, setError] = useState("");
 
-  // Joi validation schema
-  const schema = Joi.object({
-    dataType: Joi.string().valid("event", "partner", "programming").required(),
-    title: Joi.string().min(3).max(100).required(),
-    description: Joi.string().min(10).max(500).required(),
-    image: Joi.string().uri().allow(""), // Optional image URL
-  });
+  // Fetch events from the backend
+  const fetchEvents = () => {
+    fetch("http://localhost:3000/api/events")
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        return res.json(); // Parse JSON only if response is valid
+      })
+      .then((data) => {
+        console.log("Fetched events:", data); // Debug log
+        setEvents(data); // Update the state with fetched events
+      })
+      .catch((err) => {
+        console.error("Error fetching events:", err); // Log errors
+      });
+  };
+
+  // Use effect to load events when the component loads
+  useEffect(() => {
+    fetchEvents();
+  }, []);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const formattedData = {
+      ...formData,
+      details: formData.details.split(",").map((item) => item.trim()),
+      attendees: parseInt(formData.attendees, 10),
+    };
+
+    fetch("http://localhost:3000/api/events", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formattedData),
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return res.json();
+      })
+      .then((data) => {
+        if (data.success) {
+          setSuccess("Event added successfully!");
+          fetchEvents(); // Refresh the event list
+        } else {
+          setError(data.message);
+        }
+      })
+      .catch((err) => {
+        console.error("Error:", err);
+        setError("An unexpected error occurred.");
+      });
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    // Client-side validation
-    const { error } = schema.validate(formData, { abortEarly: false });
-    if (error) {
-      setError(error.details.map((err) => err.message).join(", "));
-      setSuccess("");
-      return;
-    }
-    setError("");
-
-    // Make a POST request to your backend
-    fetch("/api/admin", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success) {
-          setSuccess("Data successfully submitted!");
-          setError("");
-          setFormData({ dataType: "event", title: "", description: "", image: "" });
-        } else {
-          setError("Error submitting data.");
-          setSuccess("");
-        }
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        setError("An unexpected error occurred.");
-        setSuccess("");
-      });
-  };
-
   return (
     <div className="admin-panel">
       <h1>Admin Panel</h1>
       <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="dataType">Select Data Type:</label>
-          <select name="dataType" id="dataType" value={formData.dataType} onChange={handleChange}>
-            <option value="event">Event</option>
-            <option value="partner">Partner</option>
-            <option value="programming">Programming</option>
-          </select>
-        </div>
-        <div className="form-group">
-          <label htmlFor="title">Title:</label>
-          <input
-            type="text"
-            id="title"
-            name="title"
-            value={formData.title}
-            onChange={handleChange}
-            placeholder="Enter Title"
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="description">Description:</label>
-          <textarea
-            id="description"
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            placeholder="Enter Description"
-            required
-          ></textarea>
-        </div>
-        <div className="form-group">
-          <label htmlFor="image">Image URL:</label>
-          <input
-            type="url"
-            id="image"
-            name="image"
-            value={formData.image}
-            onChange={handleChange}
-            placeholder="Enter Image URL"
-          />
-        </div>
+        <input name="event" value={formData.event} onChange={handleChange} placeholder="Event Name" required />
+        <input name="img_name" value={formData.img_name} onChange={handleChange} placeholder="Image Name" required />
+        <input name="date" value={formData.date} onChange={handleChange} placeholder="Year (YYYY)" required />
+        <textarea name="description" value={formData.description} onChange={handleChange} placeholder="Description" required />
+        <input name="details" value={formData.details} onChange={handleChange} placeholder="Details (comma-separated)" required />
+        <input name="location" value={formData.location} onChange={handleChange} placeholder="Location" required />
+        <input name="attendees" value={formData.attendees} onChange={handleChange} placeholder="Number of Attendees" required />
+        <input name="theme" value={formData.theme} onChange={handleChange} placeholder="Theme" required />
+        <input name="organizer" value={formData.organizer} onChange={handleChange} placeholder="Organizer" required />
         <button type="submit">Submit</button>
       </form>
       {error && <p style={{ color: "red" }}>{error}</p>}
       {success && <p style={{ color: "green" }}>{success}</p>}
+
+      <h2>Event List</h2>
+      <ul>
+        {events.map((event) => (
+          <li key={event._id}>
+            {event.event} - {event.location} ({event.date})
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
