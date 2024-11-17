@@ -33,6 +33,7 @@ function Header() {
                 <Link to="/competitions">Competitions</Link>
               </div>
             </li>
+            <li><Link to="/admin">Admin Panel</Link></li>
           </ul>
         </nav>
 

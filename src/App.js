@@ -11,6 +11,8 @@ import HomePage from './pages/HomePage';
 import PrivacyPage from './pages/PrivacyPage';
 import TermsPage from './pages/TermsPage';
 import TimelinePage from './pages/TimelinePage';
+import AdminPage from './pages/AdminPage';
+
 
 function App() {
   return (
@@ -76,6 +78,14 @@ function App() {
         element={
           <Layout>
             <ContactPage />
+          </Layout>
+        }
+      />
+      <Route
+        path="/admin"
+        element={
+          <Layout>
+            <AdminPage />
           </Layout>
         }
       />
