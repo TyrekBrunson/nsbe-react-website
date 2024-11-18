@@ -18,7 +18,7 @@ function AdminPage() {
 
   // Fetch events from the backend
   const fetchEvents = () => {
-    fetch("http://localhost:3000/api/events")
+    fetch("https://nsbe-react-website-backend.onrender.com/api/events")
       .then((res) => {
         if (!res.ok) {
           throw new Error(`HTTP error! status: ${res.status}`);
@@ -46,7 +46,7 @@ function AdminPage() {
     const uploadData = new FormData();
     uploadData.append("image", file);
 
-    fetch("http://localhost:3000/api/upload", {
+    fetch("https://nsbe-react-website-backend.onrender.com/api/events", {
       method: "POST",
       body: uploadData,
     })
@@ -78,7 +78,7 @@ function AdminPage() {
 
     console.log("Submitting data:", formattedData); // Log the submitted data for debugging
 
-    fetch("http://localhost:3000/api/events", {
+    fetch("https://nsbe-react-website-backend.onrender.com/api/events", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formattedData),
