@@ -8,7 +8,7 @@ function TimelinePage() {
 
   // Fetch events from the backend
   const fetchEvents = () => {
-    fetch("http://localhost:3000/api/events")
+    fetch("https://nsbe-react-website-backend.onrender.com/")
       .then((response) => {
         if (!response.ok) {
           throw new Error("Failed to fetch events");
