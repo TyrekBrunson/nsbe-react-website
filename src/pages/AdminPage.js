@@ -33,45 +33,26 @@ function AdminPage() {
     }
   };
 
+  // Fetch events on component mount
   useEffect(() => {
-    fetchEvents(); // Load events when the component mounts
+    fetchEvents();
   }, []);
 
-  const handleImageUpload = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    const uploadData = new FormData();
-    uploadData.append("image", file);
-
-    try {
-      const res = await fetch(
-        "https://nsbe-react-website-backend.onrender.com/api/upload",
-        {
-          method: "POST",
-          body: uploadData,
-        }
-      );
-
-      const data = await res.json();
-      if (!res.ok || !data.success) {
-        throw new Error(data.message || "Image upload failed.");
-      }
-
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        img_name: data.imagePath, // Update formData with the image path
-      }));
-      setSuccess("Image uploaded successfully!");
-    } catch (err) {
-      console.error("Error uploading image:", err);
-      setError("Failed to upload image. Please try again.");
-    }
-  };
-
   const validateFormData = () => {
-    if (!formData.event || !formData.date || !formData.description) {
-      setError("Please fill out all required fields.");
+    if (!formData.event) {
+      setError("Event name is required.");
+      return false;
+    }
+    if (!formData.date) {
+      setError("Date is required.");
+      return false;
+    }
+    if (!formData.description) {
+      setError("Description is required.");
+      return false;
+    }
+    if (!formData.details || formData.details.trim() === "") {
+      setError("Details are required.");
       return false;
     }
     if (isNaN(parseInt(formData.attendees, 10))) {
@@ -88,9 +69,8 @@ function AdminPage() {
 
     const formattedData = {
       ...formData,
-      details: formData.details.split(",").map((item) => item.trim()),
-      attendees: parseInt(formData.attendees, 10) || 0,
-      img_name: formData.img_name || "default.jpg",
+      details: formData.details.split(",").map((item) => item.trim()), // Convert details to an array
+      attendees: parseInt(formData.attendees, 10), // Ensure attendees is a number
     };
 
     try {
@@ -102,14 +82,13 @@ function AdminPage() {
           body: JSON.stringify(formattedData),
         }
       );
-
       const data = await res.json();
+
       if (!res.ok || !data.success) {
-        throw new Error(data.message || "Failed to submit event.");
+        throw new Error(data.message || "Failed to add event.");
       }
 
       setSuccess("Event added successfully!");
-      fetchEvents(); // Refresh events
       setFormData({
         event: "",
         img_name: "",
@@ -121,6 +100,7 @@ function AdminPage() {
         theme: "",
         organizer: "",
       });
+      fetchEvents(); // Refresh the events list
     } catch (err) {
       console.error("Error submitting data:", err);
       setError("Failed to add event. Please try again.");
@@ -131,18 +111,16 @@ function AdminPage() {
     try {
       const res = await fetch(
         `https://nsbe-react-website-backend.onrender.com/api/events/${id}`,
-        {
-          method: "DELETE",
-        }
+        { method: "DELETE" }
       );
-
       const data = await res.json();
+
       if (!res.ok || !data.success) {
         throw new Error(data.message || "Failed to delete event.");
       }
 
       alert("Event deleted successfully!");
-      fetchEvents(); // Refresh events
+      fetchEvents(); // Refresh the events list
     } catch (err) {
       console.error("Error deleting event:", err);
       setError("Failed to delete event. Please try again.");
@@ -159,6 +137,7 @@ function AdminPage() {
       <h1>Admin Panel</h1>
       {error && <p style={{ color: "red" }}>{error}</p>}
       {success && <p style={{ color: "green" }}>{success}</p>}
+
       <form onSubmit={handleSubmit}>
         <input
           name="event"
@@ -167,15 +146,12 @@ function AdminPage() {
           placeholder="Event Name"
           required
         />
-        <div className="form-group">
-          <label htmlFor="image">Upload Image:</label>
-          <input
-            type="file"
-            id="image"
-            onChange={handleImageUpload}
-            accept="image/*"
-          />
-        </div>
+        <input
+          name="img_name"
+          value={formData.img_name}
+          onChange={handleChange}
+          placeholder="Image Name (e.g., image.jpg)"
+        />
         <input
           name="date"
           value={formData.date}
