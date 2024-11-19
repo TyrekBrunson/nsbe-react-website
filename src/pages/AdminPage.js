@@ -104,7 +104,7 @@ function AdminPage() {
   };
 
   const handleDelete = (id) => {
-    fetch(`http://localhost:3000/api/events/${id}`, {
+    fetch(`https://nsbe-react-website-backend.onrender.com/api/events${id}`, {
       method: "DELETE",
     })
       .then((res) => {
