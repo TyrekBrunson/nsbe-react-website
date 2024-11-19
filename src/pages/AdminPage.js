@@ -17,111 +17,136 @@ function AdminPage() {
   const [error, setError] = useState("");
 
   // Fetch events from the backend
-  const fetchEvents = () => {
-    fetch("https://nsbe-react-website-backend.onrender.com/api/events")
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`);
-        }
-        return res.json(); // Parse JSON only if response is valid
-      })
-      .then((data) => {
-        console.log("Fetched events:", data); // Debug log
-        setEvents(data); // Update the state with fetched events
-      })
-      .catch((err) => {
-        console.error("Error fetching events:", err); // Log errors
-      });
+  const fetchEvents = async () => {
+    try {
+      const res = await fetch(
+        "https://nsbe-react-website-backend.onrender.com/api/events"
+      );
+      if (!res.ok) {
+        throw new Error(`Failed to fetch events: ${res.statusText}`);
+      }
+      const data = await res.json();
+      setEvents(data); // Update the state with fetched events
+    } catch (err) {
+      console.error("Error fetching events:", err);
+      setError("Failed to load events. Please try again.");
+    }
   };
 
-  // Use effect to load events when the component loads
   useEffect(() => {
-    fetchEvents();
+    fetchEvents(); // Load events when the component mounts
   }, []);
 
-  const handleImageUpload = (e) => {
+  const handleImageUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
     const uploadData = new FormData();
     uploadData.append("image", file);
 
-    fetch("https://nsbe-react-website-backend.onrender.com/api/events", {
-      method: "POST",
-      body: uploadData,
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success) {
-          setFormData((prevFormData) => ({
-            ...prevFormData,
-            img_name: data.imagePath, // Update formData with the image path
-          }));
-          alert("Image uploaded successfully!");
-        } else {
-          alert("Image upload failed: " + data.message);
+    try {
+      const res = await fetch(
+        "https://nsbe-react-website-backend.onrender.com/api/upload",
+        {
+          method: "POST",
+          body: uploadData,
         }
-      })
-      .catch((err) => console.error("Error uploading image:", err));
+      );
+
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.message || "Image upload failed.");
+      }
+
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        img_name: data.imagePath, // Update formData with the image path
+      }));
+      setSuccess("Image uploaded successfully!");
+    } catch (err) {
+      console.error("Error uploading image:", err);
+      setError("Failed to upload image. Please try again.");
+    }
   };
 
-  const handleSubmit = (e) => {
+  const validateFormData = () => {
+    if (!formData.event || !formData.date || !formData.description) {
+      setError("Please fill out all required fields.");
+      return false;
+    }
+    if (isNaN(parseInt(formData.attendees, 10))) {
+      setError("Attendees must be a number.");
+      return false;
+    }
+    return true;
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-  
-    // Format the data before submission
+
+    if (!validateFormData()) return;
+
     const formattedData = {
       ...formData,
-      details: formData.details.split(",").map((item) => item.trim()), // Split and trim details
-      attendees: parseInt(formData.attendees, 10) || 0, // Ensure attendees is a number, default to 0
-      img_name: formData.img_name || "default.jpg", // Fallback to a default image name
+      details: formData.details.split(",").map((item) => item.trim()),
+      attendees: parseInt(formData.attendees, 10) || 0,
+      img_name: formData.img_name || "default.jpg",
     };
 
-    console.log("Submitting data:", formattedData); // Log the submitted data for debugging
+    try {
+      const res = await fetch(
+        "https://nsbe-react-website-backend.onrender.com/api/events",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formattedData),
+        }
+      );
 
-    fetch("https://nsbe-react-website-backend.onrender.com/api/events", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formattedData),
-    })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return res.json();
-      })
-      .then((data) => {
-        if (data.success) {
-          setSuccess("Event added successfully!");
-          fetchEvents(); // Refresh the event list
-        } else {
-          setError(data.message);
-        }
-      })
-      .catch((err) => {
-        console.error("Error:", err); // Log the error
-        setError("An unexpected error occurred.");
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.message || "Failed to submit event.");
+      }
+
+      setSuccess("Event added successfully!");
+      fetchEvents(); // Refresh events
+      setFormData({
+        event: "",
+        img_name: "",
+        date: "",
+        description: "",
+        details: "",
+        location: "",
+        attendees: "",
+        theme: "",
+        organizer: "",
       });
+    } catch (err) {
+      console.error("Error submitting data:", err);
+      setError("Failed to add event. Please try again.");
+    }
   };
 
-  const handleDelete = (id) => {
-    fetch(`https://nsbe-react-website-backend.onrender.com/api/events${id}`, {
-      method: "DELETE",
-    })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Failed to delete event");
+  const handleDelete = async (id) => {
+    try {
+      const res = await fetch(
+        `https://nsbe-react-website-backend.onrender.com/api/events/${id}`,
+        {
+          method: "DELETE",
         }
-        return res.json();
-      })
-      .then((data) => {
-        if (data.success) {
-          alert("Event deleted successfully!");
-          fetchEvents(); // Refresh the event list
-        } else {
-          alert("Error deleting event: " + data.message);
-        }
-      })
-      .catch((err) => console.error("Error deleting event:", err));
+      );
+
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.message || "Failed to delete event.");
+      }
+
+      alert("Event deleted successfully!");
+      fetchEvents(); // Refresh events
+    } catch (err) {
+      console.error("Error deleting event:", err);
+      setError("Failed to delete event. Please try again.");
+    }
   };
 
   const handleChange = (e) => {
@@ -132,6 +157,8 @@ function AdminPage() {
   return (
     <div className="admin-panel">
       <h1>Admin Panel</h1>
+      {error && <p style={{ color: "red" }}>{error}</p>}
+      {success && <p style={{ color: "green" }}>{success}</p>}
       <form onSubmit={handleSubmit}>
         <input
           name="event"
@@ -200,8 +227,6 @@ function AdminPage() {
         />
         <button type="submit">Submit</button>
       </form>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      {success && <p style={{ color: "green" }}>{success}</p>}
 
       <h2>Event List</h2>
       <ul>
