@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 
 function AdminPage() {
-  const [events, setEvents] = useState([]);
+  const [events, setEvents] = useState([]); // Store events
   const [formData, setFormData] = useState({
     event: "",
-    img_name: "",
+    img: null, // Added for image upload
     date: "",
     description: "",
     details: "",
@@ -13,102 +13,95 @@ function AdminPage() {
     theme: "",
     organizer: "",
   });
-  const [imageFile, setImageFile] = useState(null);
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
 
   // Fetch events from the backend
   const fetchEvents = async () => {
     try {
-      console.log("Fetching events...");
-      const res = await fetch("https://nsbe-react-website-backend.onrender.com/api/events");
+      const res = await fetch(
+        "https://nsbe-react-website-backend.onrender.com/api/events"
+      );
       if (!res.ok) {
         throw new Error(`Failed to fetch events: ${res.statusText}`);
       }
       const data = await res.json();
-      console.log("Fetched events:", data);
-      setEvents(data);
+      setEvents(data); // Update the state with fetched events
     } catch (err) {
       console.error("Error fetching events:", err);
       setError("Failed to load events. Please try again.");
     }
   };
 
+  // Fetch events on component mount
   useEffect(() => {
     fetchEvents();
   }, []);
 
   const validateFormData = () => {
-    console.log("Validating form data:", formData);
-    if (!formData.event.trim()) {
+    if (!formData.event) {
       setError("Event name is required.");
       return false;
     }
-    if (!formData.date.trim()) {
+    if (!formData.date) {
       setError("Date is required.");
       return false;
     }
-    if (!formData.description.trim()) {
+    if (!formData.description) {
       setError("Description is required.");
       return false;
     }
-    if (!formData.details.trim()) {
+    if (!formData.details || formData.details.trim() === "") {
       setError("Details are required.");
       return false;
     }
-    if (!Number.isInteger(parseInt(formData.attendees, 10))) {
-      setError("Attendees must be a valid number.");
+    if (isNaN(parseInt(formData.attendees, 10))) {
+      setError("Attendees must be a number.");
       return false;
     }
     return true;
   };
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    setFormData({ ...formData, img: file });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(""); // Clear any existing errors
-    setSuccess(""); // Clear any existing success messages
 
     if (!validateFormData()) return;
 
-    const formDataToSend = new FormData();
-    formDataToSend.append("event", formData.event.trim());
-    formDataToSend.append("date", formData.date.trim());
-    formDataToSend.append("description", formData.description.trim());
-    formDataToSend.append("details", formData.details.trim());
-    formDataToSend.append("location", formData.location.trim());
-    formDataToSend.append("attendees", parseInt(formData.attendees, 10));
-    formDataToSend.append("theme", formData.theme.trim());
-    formDataToSend.append("organizer", formData.organizer.trim());
-
-    if (imageFile) {
-      formDataToSend.append("img_name", imageFile);
-    } else {
-      formDataToSend.append("img_name", "default.jpg"); // Provide a default image name if none is uploaded
-    }
-
-    console.log("Submitting data:", Object.fromEntries(formDataToSend));
+    const formattedData = new FormData();
+    Object.keys(formData).forEach((key) => {
+      if (formData[key] !== null) {
+        formattedData.append(key, formData[key]);
+      }
+    });
 
     try {
-      const res = await fetch("https://nsbe-react-website-backend.onrender.com/api/events", {
-        method: "POST",
-        body: formDataToSend,
-      });
-
-      console.log("Response status:", res.status);
-
-      if (!res.ok) {
-        const errorResponse = await res.json();
-        console.error("Server response error:", errorResponse);
-        throw new Error(errorResponse.message || "Failed to add event");
-      }
-
+      const res = await fetch(
+        "https://nsbe-react-website-backend.onrender.com/api/events",
+        {
+          method: "POST",
+          body: formattedData,
+        }
+      );
       const data = await res.json();
-      console.log("Event added successfully:", data);
+
+      if (!res.ok || !data.success) {
+        throw new Error(data.message || "Failed to add event.");
+      }
 
       setSuccess("Event added successfully!");
       setFormData({
         event: "",
-        img_name: "",
+        img: null,
         date: "",
         description: "",
         details: "",
@@ -117,17 +110,31 @@ function AdminPage() {
         theme: "",
         organizer: "",
       });
-      setImageFile(null);
-      fetchEvents();
+      fetchEvents(); // Refresh the events list
     } catch (err) {
-      console.error("Error submitting data:", err.message);
-      setError(err.message || "Failed to add event. Please try again.");
+      console.error("Error submitting data:", err);
+      setError("Failed to add event. Please try again.");
     }
   };
 
-  const handleImageChange = (e) => {
-    console.log("Selected image file:", e.target.files[0]);
-    setImageFile(e.target.files[0]);
+  const handleDelete = async (id) => {
+    try {
+      const res = await fetch(
+        `https://nsbe-react-website-backend.onrender.com/api/events/${id}`,
+        { method: "DELETE" }
+      );
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        throw new Error(data.message || "Failed to delete event.");
+      }
+
+      alert("Event deleted successfully!");
+      fetchEvents(); // Refresh the events list
+    } catch (err) {
+      console.error("Error deleting event:", err);
+      setError("Failed to delete event. Please try again.");
+    }
   };
 
   return (
@@ -140,57 +147,69 @@ function AdminPage() {
         <input
           name="event"
           value={formData.event}
-          onChange={(e) => setFormData({ ...formData, event: e.target.value })}
+          onChange={handleChange}
           placeholder="Event Name"
           required
         />
-        <input type="file" name="img_name" accept="image/*" onChange={handleImageChange} />
+        <input
+          type="file"
+          name="img"
+          accept="image/*"
+          onChange={handleImageChange}
+        />
+        {formData.img && (
+          <img
+            src={URL.createObjectURL(formData.img)}
+            alt="Preview"
+            style={{ maxWidth: "200px", marginTop: "10px" }}
+          />
+        )}
         <input
           name="date"
           value={formData.date}
-          onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+          onChange={handleChange}
           placeholder="Year (YYYY)"
           required
         />
         <textarea
           name="description"
           value={formData.description}
-          onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+          onChange={handleChange}
           placeholder="Description"
           required
         />
         <input
           name="details"
           value={formData.details}
-          onChange={(e) => setFormData({ ...formData, details: e.target.value })}
+          onChange={handleChange}
           placeholder="Details (comma-separated)"
           required
         />
         <input
           name="location"
           value={formData.location}
-          onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+          onChange={handleChange}
           placeholder="Location"
           required
         />
         <input
           name="attendees"
           value={formData.attendees}
-          onChange={(e) => setFormData({ ...formData, attendees: e.target.value })}
+          onChange={handleChange}
           placeholder="Number of Attendees"
           required
         />
         <input
           name="theme"
           value={formData.theme}
-          onChange={(e) => setFormData({ ...formData, theme: e.target.value })}
+          onChange={handleChange}
           placeholder="Theme"
           required
         />
         <input
           name="organizer"
           value={formData.organizer}
-          onChange={(e) => setFormData({ ...formData, organizer: e.target.value })}
+          onChange={handleChange}
           placeholder="Organizer"
           required
         />
@@ -201,7 +220,8 @@ function AdminPage() {
       <ul>
         {events.map((event) => (
           <li key={event._id}>
-            {event.event} - {event.location} ({event.date})
+            {event.event} - {event.location} ({event.date}){" "}
+            <button onClick={() => handleDelete(event._id)}>Delete</button>
           </li>
         ))}
       </ul>
