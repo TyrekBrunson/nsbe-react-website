@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/nsbe-react-website/static/css/main.a5e0921d.css",
-    "main.js": "/nsbe-react-website/static/js/main.2b94e9fc.js",
+    "main.js": "/nsbe-react-website/static/js/main.21aecb51.js",
     "static/media/banner-city.png": "/nsbe-react-website/static/media/banner-city.d20d06cb531b4aa2368a.png",
     "static/media/banner1-placeholder.png": "/nsbe-react-website/static/media/banner1-placeholder.9d2295f3b5549f091644.png",
     "static/media/banner2-placeholder.png": "/nsbe-react-website/static/media/banner2-placeholder.ad1b61885ef562e94c16.png",
@@ -14,10 +14,10 @@
     "static/media/nsbe-logo.png": "/nsbe-react-website/static/media/nsbe-logo.4896712de413af9451e2.png",
     "index.html": "/nsbe-react-website/index.html",
     "main.a5e0921d.css.map": "/nsbe-react-website/static/css/main.a5e0921d.css.map",
-    "main.2b94e9fc.js.map": "/nsbe-react-website/static/js/main.2b94e9fc.js.map"
+    "main.21aecb51.js.map": "/nsbe-react-website/static/js/main.21aecb51.js.map"
   },
   "entrypoints": [
     "static/css/main.a5e0921d.css",
-    "static/js/main.2b94e9fc.js"
+    "static/js/main.21aecb51.js"
   ]
 }
