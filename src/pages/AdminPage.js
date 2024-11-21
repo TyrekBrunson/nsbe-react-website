@@ -4,7 +4,7 @@ function AdminPage() {
   const [events, setEvents] = useState([]); // Store events
   const [formData, setFormData] = useState({
     event: "",
-    img: null, // Added for image upload
+    img: null, // Changed from img_name to handle image file
     date: "",
     description: "",
     details: "",
@@ -62,46 +62,41 @@ function AdminPage() {
     return true;
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    setFormData({ ...formData, img: file });
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     if (!validateFormData()) return;
-  
-    const formattedData = new FormData();
-    formattedData.append("event", formData.event);
-    formattedData.append("date", formData.date);
-    formattedData.append("description", formData.description);
-    formattedData.append("details", formData.details.split(",").map((item) => item.trim())); // Convert to array
-    formattedData.append("location", formData.location);
-    formattedData.append("attendees", parseInt(formData.attendees, 10)); // Ensure number
-    formattedData.append("theme", formData.theme);
-    formattedData.append("organizer", formData.organizer);
+
+    const formPayload = new FormData(); // Use FormData for image upload
+    formPayload.append("event", formData.event);
+    formPayload.append("date", formData.date);
+    formPayload.append("description", formData.description);
+    formPayload.append(
+      "details",
+      formData.details.split(",").map((item) => item.trim())
+    );
+    formPayload.append("location", formData.location);
+    formPayload.append("attendees", parseInt(formData.attendees, 10));
+    formPayload.append("theme", formData.theme);
+    formPayload.append("organizer", formData.organizer);
     if (formData.img) {
-      formattedData.append("img", formData.img); // Attach the image
+      formPayload.append("img", formData.img); // Append image file
     }
-  
+
     try {
-      const res = await fetch("http://localhost:3000/api/events", {
-        method: "POST",
-        body: formattedData,
-      });
-  
+      const res = await fetch(
+        "https://nsbe-react-website-backend.onrender.com/api/events",
+        {
+          method: "POST",
+          body: formPayload,
+        }
+      );
       const data = await res.json();
-  
+
       if (!res.ok || !data.success) {
         throw new Error(data.message || "Failed to add event.");
       }
-  
+
       setSuccess("Event added successfully!");
       setFormData({
         event: "",
@@ -141,6 +136,16 @@ function AdminPage() {
     }
   };
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    setFormData({ ...formData, img: file });
+  };
+
   return (
     <div className="admin-panel">
       <h1>Admin Panel</h1>
@@ -159,15 +164,8 @@ function AdminPage() {
           type="file"
           name="img"
           accept="image/*"
-          onChange={handleImageChange}
+          onChange={handleImageChange} // Handle file input
         />
-        {formData.img && (
-          <img
-            src={URL.createObjectURL(formData.img)}
-            alt="Preview"
-            style={{ maxWidth: "200px", marginTop: "10px" }}
-          />
-        )}
         <input
           name="date"
           value={formData.date}
