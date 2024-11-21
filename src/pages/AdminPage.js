@@ -74,30 +74,34 @@ function AdminPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (!validateFormData()) return;
-
+  
     const formattedData = new FormData();
-    Object.keys(formData).forEach((key) => {
-      if (formData[key] !== null) {
-        formattedData.append(key, formData[key]);
-      }
-    });
-
+    formattedData.append("event", formData.event);
+    formattedData.append("date", formData.date);
+    formattedData.append("description", formData.description);
+    formattedData.append("details", formData.details.split(",").map((item) => item.trim())); // Convert to array
+    formattedData.append("location", formData.location);
+    formattedData.append("attendees", parseInt(formData.attendees, 10)); // Ensure number
+    formattedData.append("theme", formData.theme);
+    formattedData.append("organizer", formData.organizer);
+    if (formData.img) {
+      formattedData.append("img", formData.img); // Attach the image
+    }
+  
     try {
-      const res = await fetch(
-        "https://nsbe-react-website-backend.onrender.com/api/events",
-        {
-          method: "POST",
-          body: formattedData,
-        }
-      );
+      const res = await fetch("http://localhost:3000/api/events", {
+        method: "POST",
+        body: formattedData,
+      });
+  
       const data = await res.json();
-
+  
       if (!res.ok || !data.success) {
         throw new Error(data.message || "Failed to add event.");
       }
-
+  
       setSuccess("Event added successfully!");
       setFormData({
         event: "",
